@@ -9,6 +9,10 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 
+interface RequestConUsuario extends Request {
+  user?: any;
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -18,7 +22,8 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    // CORREGIDO: Usamos el genérico <RequestConUsuario>
+    const request = context.switchToHttp().getRequest<RequestConUsuario>();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -26,15 +31,21 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
-      });
+      const secret = this.configService.get<string>('JWT_SECRET') || '';
+
+      // CORREGIDO: Quitamos el "as". Declaramos el tipo en la variable para apaciguar al linter
+      const payload: { sub: number } = await this.jwtService.verifyAsync(
+        token,
+        {
+          secret: secret,
+        },
+      );
 
       const user = await this.usersService.findById(payload.sub);
       if (!user) throw new UnauthorizedException('El usuario ya no existe.');
 
       // Guardamos al usuario en la petición para usarlo en los controladores
-      request['user'] = user;
+      request.user = user;
     } catch {
       throw new UnauthorizedException('Token inválido o expirado.');
     }

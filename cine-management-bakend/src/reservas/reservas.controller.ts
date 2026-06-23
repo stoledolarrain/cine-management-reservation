@@ -19,17 +19,21 @@ export class ReservasController {
   @Post()
   async crearReserva(
     @Body() createReservaDto: CreateReservaDto,
-    @Request() req: any,
+    @Request() req: unknown,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const userId: number = req.user.id;
+    // 🧠 Le decimos a TypeScript la forma exacta que tiene req.user (id y rol)
+    // Esto quita el error de ESLint por completo sin usar trucos de ignorar líneas
+    const requestConUsuario = req as { user: { id: number; rol: string } };
+    const userId = requestConUsuario.user.id;
+
     return this.reservasService.create(createReservaDto, userId);
   }
 
   @Get('mis-reservas')
-  async obtenerMisReservas(@Request() req: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const userId: number = req.user.id;
+  async obtenerMisReservas(@Request() req: unknown) {
+    const requestConUsuario = req as { user: { id: number; rol: string } };
+    const userId = requestConUsuario.user.id;
+
     return this.reservasService.findMisReservas(userId);
   }
 }
