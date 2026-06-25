@@ -44,13 +44,19 @@ export class ReservasService {
     const totalPagado = funcion.precioEntrada * dto.asientos.length;
 
     // Prepara las entidades de Asiento (extrayendo fila y columna del código ej. "A-1")
+    // Prepara las entidades de Asiento
     const nuevosAsientos = dto.asientos.map((codigoStr) => {
-      // Opcional: Si tu frontend manda "A-1", puedes separar letra y número aquí.
-      // Por simplicidad, guardaremos el código directo.
+      // Separamos "A-1" en ["A", "1"]
+      const [letra, numero] = codigoStr.split('-');
+
+      // Convertimos 'A' en 1, 'B' en 2, etc. (charCodeAt('A') es 65)
+      const fila = letra.toUpperCase().charCodeAt(0) - 64;
+      const columna = parseInt(numero, 10);
+
       return this.asientoRepo.create({
         codigo: codigoStr,
-        fila: 0, // Aquí puedes implementar lógica para extraer la fila del código si lo deseas
-        columna: 0,
+        fila: fila, // Ahora guardamos el valor real (1, 2, etc.)
+        columna: columna, // Ahora guardamos el valor real (1, 2, etc.)
         funcion: funcion,
       });
     });

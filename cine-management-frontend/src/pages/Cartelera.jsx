@@ -100,10 +100,9 @@ export default function Cartelera() {
             className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
           >
             <div className="aspect-[2/3] w-full bg-gray-200 relative overflow-hidden">
-              {/* Fallback de imagen en caso de que no tenga */}
-              {pelicula.imagenPoster ? (
+              {pelicula.posterUrl ? (
                 <img
-                  src={pelicula.imagenPoster}
+                  src={pelicula.posterUrl}
                   alt={`Póster de ${pelicula.titulo}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

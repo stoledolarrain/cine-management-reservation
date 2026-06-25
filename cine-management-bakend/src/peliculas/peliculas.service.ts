@@ -11,46 +11,51 @@ export class PeliculasService {
     private readonly peliculaRepository: Repository<Pelicula>,
   ) {}
 
-  // Busca todas las películas, aplicando filtros si el frontend los envía
   async findAll(buscar?: string, genero?: string): Promise<Pelicula[]> {
     const whereClause: any = {};
-
-    if (buscar) {
-      whereClause.titulo = Like(`%${buscar}%`); // Búsqueda parcial (ej. "Bat" encuentra "Batman")
-    }
-
-    if (genero) {
-      whereClause.genero = genero;
-    }
-
-    // Trae las películas y de paso carga las funciones asociadas
+    if (buscar) whereClause.titulo = Like(`%${buscar}%`);
+    if (genero) whereClause.genero = genero;
     return this.peliculaRepository.find({
       where: whereClause,
-      relations: { funciones: true }, // CORREGIDO AQUÍ
+      relations: { funciones: true },
     });
   }
 
   async findOne(id: number): Promise<Pelicula> {
     const pelicula = await this.peliculaRepository.findOne({
       where: { id },
-      relations: { funciones: true }, // CORREGIDO AQUÍ
+      relations: { funciones: true },
     });
     if (!pelicula) throw new NotFoundException('Película no encontrada.');
     return pelicula;
   }
 
-  // --- Funciones de Administrador ---
+  async create(
+    dto: CreatePeliculaDto,
+    file?: Express.Multer.File,
+  ): Promise<Pelicula> {
+    // 1. Creamos la instancia de la entidad
+    const nuevaPelicula = new Pelicula();
 
-  async create(createPeliculaDto: CreatePeliculaDto): Promise<Pelicula> {
-    const nuevaPelicula = this.peliculaRepository.create(createPeliculaDto);
-    return this.peliculaRepository.save(nuevaPelicula);
+    // 2. Asignamos manualmente (así TypeScript no se confunde con el tipo 'DeepPartial')
+    nuevaPelicula.titulo = dto.titulo;
+    nuevaPelicula.sinopsis = dto.sinopsis;
+    nuevaPelicula.genero = dto.genero;
+    nuevaPelicula.duracion = dto.duracion;
+    nuevaPelicula.clasificacion = dto.clasificacion;
+    nuevaPelicula.posterUrl = file ? `/uploads/${file.filename}` : null;
+
+    // 3. Guardamos
+    return await this.peliculaRepository.save(nuevaPelicula);
   }
 
   async update(
     id: number,
     updateData: Partial<CreatePeliculaDto>,
+    file?: Express.Multer.File,
   ): Promise<Pelicula> {
     const pelicula = await this.findOne(id);
+    if (file) updateData.posterUrl = `/uploads/${file.filename}`;
     Object.assign(pelicula, updateData);
     return this.peliculaRepository.save(pelicula);
   }

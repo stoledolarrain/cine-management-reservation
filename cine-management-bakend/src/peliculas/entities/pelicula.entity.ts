@@ -22,7 +22,7 @@ export class Pelicula {
   clasificacion: string; // ej. +14, R, Todo público
 
   @Column({ type: 'varchar', nullable: true })
-  posterUrl: string; // URL de la imagen subida
+  posterUrl: string | null;
 
   // Una película se proyecta en muchas funciones
   @OneToMany(() => Funcion, (funcion) => funcion.pelicula)

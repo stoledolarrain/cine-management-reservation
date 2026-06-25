@@ -28,7 +28,6 @@ export class UploadsController {
       storage: diskStorage({
         destination: './uploads/posters',
         filename: (req: any, file: any, callback: any) => {
-          // El linter ya no molestará por acceder a file.originalname
           const originalname = file.originalname;
           const uniqueSuffix =
             Date.now().toString() +
