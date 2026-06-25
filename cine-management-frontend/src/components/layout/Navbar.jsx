@@ -25,18 +25,16 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            {/* VISTA DEL CLIENTE */}
             {role === 'cliente' && (
               <>
                 <Link to="/profile" className="text-sm font-medium text-gray-600 hover:text-blue-600">Mis Reservas</Link>
               </>
             )}
 
-            {/* VISTA DEL ADMINISTRADOR */}
             {role === 'admin' && (
               <>
                 <Link to="/admin" className="text-sm font-medium text-gray-600 hover:text-blue-600">Dashboard</Link>
-                <Link to="/admin/movies" className="text-sm font-medium text-gray-600 hover:text-blue-600">Películas</Link>
+                <Link to="/admin/salas" className="text-sm font-medium text-gray-600 hover:text-blue-600">Crear Salas</Link>
                 <Link to="/admin/showtimes" className="text-sm font-medium text-gray-600 hover:text-blue-600">Funciones</Link>
               </>
             )}

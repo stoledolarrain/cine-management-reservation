@@ -1,3 +1,4 @@
+// src/pages/Profile.jsx
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../lib/api";
@@ -5,12 +6,12 @@ import api from "../lib/api";
 export default function Profile() {
   const [reservas, setReservas] = useState([]);
   const [status, setStatus] = useState({ loading: true, error: "" });
+  
+  const API_URL = "http://localhost:3000";
 
   useEffect(() => {
     const fetchReservas = async () => {
       try {
-        // Hacemos la petición GET a tu backend.
-        // Al enviar el token en api.js, el backend sabe quién eres y debería devolver solo TUS reservas.
         const response = await api.get("/reservas/mis-reservas");
         setReservas(response.data);
         setStatus({ loading: false, error: "" });
@@ -81,7 +82,6 @@ export default function Profile() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {reservas.map((reserva) => {
-            // Extraemos los datos para que el código sea más limpio
             const funcion = reserva.funcion;
             const pelicula = funcion?.pelicula;
             const sala = funcion?.sala;
@@ -92,11 +92,10 @@ export default function Profile() {
                 key={reserva.id}
                 className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col sm:flex-row relative group hover:shadow-md transition-shadow"
               >
-                {/* Lado Izquierdo del Ticket (Póster recortado) */}
                 <div className="sm:w-1/3 bg-gray-900 h-48 sm:h-auto relative">
                   {pelicula?.posterUrl ? (
                     <img
-                      src={pelicula.posterUrl}
+                      src={`${API_URL}${pelicula.posterUrl}`}
                       alt={pelicula?.titulo}
                       className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     />
@@ -110,10 +109,8 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* Línea Punteada del Ticket (Efecto Visual) */}
                 <div className="hidden sm:block w-0 border-r-2 border-dashed border-gray-200 absolute left-1/3 top-4 bottom-4 z-10"></div>
 
-                {/* Lado Derecho del Ticket (Detalles) */}
                 <div className="p-6 sm:w-2/3 flex flex-col justify-center">
                   <h3 className="text-xl font-black text-gray-900 mb-1 leading-tight">
                     {pelicula?.titulo || "Película Desconocida"}
@@ -159,8 +156,6 @@ export default function Profile() {
                       <p className="font-medium text-gray-800">
                         {reserva.asientos
                           ?.map((a) =>
-                            // Si 'a' ya es un string (ej. "A-1"), lo muestra directo.
-                            // Si es un objeto, intenta acceder a fila/columna con validación
                             typeof a === "string"
                               ? a
                               : a.fila
@@ -173,7 +168,6 @@ export default function Profile() {
                   </div>
                 </div>
 
-                {/* Círculos recortados para efecto de ticket */}
                 <div className="w-6 h-6 bg-gray-50 rounded-full absolute -top-3 left-1/3 -ml-3 hidden sm:block border-b border-gray-200"></div>
                 <div className="w-6 h-6 bg-gray-50 rounded-full absolute -bottom-3 left-1/3 -ml-3 hidden sm:block border-t border-gray-200"></div>
               </div>

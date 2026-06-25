@@ -5,7 +5,6 @@ export default function AdminShowtimes() {
   const [peliculas, setPeliculas] = useState([]);
   const [salas, setSalas] = useState([]);
 
-  // 1. CORREGIDO: Usamos precioEntrada en el estado inicial
   const [formData, setFormData] = useState({
     peliculaId: "",
     salaId: "",
@@ -51,12 +50,11 @@ export default function AdminShowtimes() {
     setStatus({ ...status, loading: true, error: "", success: "" });
 
     try {
-      // 2. CORREGIDO: Armamos el payload exactamente como lo pide tu DTO
       const payload = {
         peliculaId: parseInt(formData.peliculaId, 10),
         salaId: parseInt(formData.salaId, 10),
         fechaHora: new Date(formData.fechaHora).toISOString(),
-        precioEntrada: parseFloat(formData.precioEntrada), // Usamos la variable correcta
+        precioEntrada: parseFloat(formData.precioEntrada),
       };
 
       await api.post("/funciones", payload);
@@ -66,7 +64,6 @@ export default function AdminShowtimes() {
         loading: false,
         success: "¡Función programada exitosamente!",
       });
-      // 3. CORREGIDO: Limpiamos usando precioEntrada
       setFormData({
         peliculaId: "",
         salaId: "",
@@ -170,11 +167,11 @@ export default function AdminShowtimes() {
               </label>
               <input
                 type="number"
-                name="precioEntrada" // 4. CORREGIDO: El name del input
+                name="precioEntrada"
                 required
                 min="0"
                 step="0.10"
-                value={formData.precioEntrada} // 5. CORREGIDO: El value del input
+                value={formData.precioEntrada}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none"
                 placeholder="Ej. 45.50"

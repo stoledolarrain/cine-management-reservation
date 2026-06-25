@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../lib/api"; // Conexión a tu backend NestJS
+import api from "../lib/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ export default function Register() {
     password: "",
   });
 
-  // Estados para mejorar la UX (Experiencia de Usuario)
   const [status, setStatus] = useState({
     loading: false,
     error: "",
@@ -19,7 +18,7 @@ export default function Register() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setStatus({ loading: false, error: "", success: "" }); // Limpiamos alertas
+    setStatus({ loading: false, error: "", success: "" }); 
   };
 
   const handleSubmit = async (e) => {
@@ -27,23 +26,19 @@ export default function Register() {
     setStatus({ loading: true, error: "", success: "" });
 
     try {
-      // Hacemos la petición POST real a tu controlador auth.controller.ts
       await api.post("/auth/register", formData);
 
-      // Si el backend responde con éxito, mostramos mensaje y redirigimos
       setStatus({
         loading: false,
         error: "",
         success: "¡Cuenta creada con éxito! Redirigiendo...",
       });
 
-      // Esperamos 2 segundos para que el usuario lea el mensaje antes de enviarlo al Login
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err) {
       console.error("Error al registrar:", err);
-      // Extraemos el mensaje de validación de NestJS (muy útil porque te dirá si la clave es muy corta, etc.)
       const backendMessage =
         err.response?.data?.message || "Hubo un error al crear la cuenta.";
       setStatus({
@@ -114,7 +109,6 @@ export default function Register() {
             />
           </div>
 
-          {/* Alertas de UX */}
           {status.error && (
             <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-sm font-medium rounded-lg">
               {status.error}

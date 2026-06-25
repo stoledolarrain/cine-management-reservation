@@ -41,16 +41,14 @@ export default function Book() {
     setStatus(prev => ({ ...prev, submitting: true, error: '' }));
 
     try {
-      // AQUÍ ESTÁ LA MAGIA QUE SOLUCIONA EL ERROR:
-      // Mapeamos nuestro array de objetos a un array de strings ["A-1", "A-2"]
       const asientosFormateados = asientosSeleccionados.map(a => {
-        const letraFila = String.fromCharCode(64 + a.fila); // Convierte 1 en 'A', 2 en 'B', etc.
+        const letraFila = String.fromCharCode(64 + a.fila);
         return `${letraFila}-${a.columna}`;
       });
 
       const payload = {
         funcionId: parseInt(showtimeId, 10),
-        asientos: asientosFormateados // Enviamos exactamente lo que pide el backend
+        asientos: asientosFormateados
       };
 
       await api.post('/reservas', payload);
@@ -58,7 +56,7 @@ export default function Book() {
       setStatus(prev => ({ ...prev, submitting: false, success: '¡Reserva confirmada exitosamente!' }));
       
       setTimeout(() => {
-        navigate('/'); // Te enviamos al inicio por ahora
+        navigate('/'); 
       }, 2000);
 
     } catch (err) {
@@ -93,7 +91,7 @@ export default function Book() {
           >
             {Array.from({ length: funcion.sala.filas }).map((_, filaIndex) => {
               const fila = filaIndex + 1;
-              const letraFila = String.fromCharCode(64 + fila); // Letra para la UI
+              const letraFila = String.fromCharCode(64 + fila); 
               
               return Array.from({ length: funcion.sala.columnas }).map((_, colIndex) => {
                 const columna = colIndex + 1;
@@ -118,7 +116,6 @@ export default function Book() {
                     className={seatClasses}
                     title={`Fila ${letraFila}, Asiento ${columna}`}
                   >
-                    {/* Ahora los botones mostrarán A-1, B-2, etc. en la pantalla */}
                     {letraFila}-{columna}
                   </button>
                 );

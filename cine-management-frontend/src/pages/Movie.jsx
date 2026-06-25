@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 
 export default function Movie() {
-  const { id } = useParams(); // Sacamos el ID de la película de la URL
-  const navigate = useNavigate(); // Hook para la interacción de redirección
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  const API_URL = "http://localhost:3000";
   
   const [pelicula, setPelicula] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +14,6 @@ export default function Movie() {
   useEffect(() => {
     const fetchDetalle = async () => {
       try {
-        // Tu backend ya tiene esta ruta preparada según el controlador que analizamos
         const response = await api.get(`/peliculas/${id}`);
         setPelicula(response.data);
       } catch (err) {
@@ -31,11 +32,10 @@ export default function Movie() {
     <div className="py-8 px-4 max-w-6xl mx-auto">
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
         
-        {/* Lado Izquierdo: Poster */}
         <div className="md:w-1/3 bg-gray-900 relative">
           {pelicula.posterUrl ? (
             <img 
-              src={pelicula.posterUrl} 
+              src={`${API_URL}${pelicula.posterUrl}`} 
               alt={pelicula.titulo} 
               className="w-full h-full object-cover opacity-90"
             />
@@ -44,7 +44,6 @@ export default function Movie() {
           )}
         </div>
 
-        {/* Lado Derecho: Detalles e Interacción */}
         <div className="p-8 md:p-12 md:w-2/3 flex flex-col">
           <div className="mb-2 flex items-center gap-3">
             <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-md">
@@ -66,7 +65,6 @@ export default function Movie() {
             {pelicula.sinopsis}
           </p>
 
-          {/* SECCIÓN DE FUNCIONES (Interacción Principal) */}
           <div className="mt-auto border-t border-gray-100 pt-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Funciones Disponibles</h3>
             
@@ -84,7 +82,6 @@ export default function Movie() {
                       <p className="text-sm text-gray-500 mt-1">{funcion.sala.nombre} • Bs. {funcion.precioEntrada}</p>
                     </div>
                     
-                    {/* ESTE ES EL BOTÓN DE INTERACCIÓN QUE PEDÍAS */}
                     <button 
                       onClick={() => navigate(`/book/${funcion.id}`)}
                       className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
@@ -100,7 +97,6 @@ export default function Movie() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>

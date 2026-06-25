@@ -6,10 +6,8 @@ import {
   Outlet,
 } from "react-router-dom";
 
-// Importación de componentes de diseño
 import Navbar from "./components/layout/Navbar";
 
-// Importación de páginas
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cartelera from "./pages/Cartelera";
@@ -17,13 +15,12 @@ import Book from "./pages/Book";
 import Movie from "./pages/Movie";
 import Profile from "./pages/Profile";
 
-// Importación de Admin
 import AdminMovies from "./pages/admin/Movies";
 import AdminRooms from "./pages/admin/Rooms";
 import AdminShowtimes from "./pages/admin/Showtimes";
 import AdminMovieForm from "./pages/admin/MovieForm";
+import AdminSalas from "./pages/admin/AdminSalas";
 
-// --- COMPONENTE DE RUTA PROTEGIDA ---
 const ProtectedRoute = ({ roleRequerido }) => {
   const token = localStorage.getItem("token");
   const userRole = localStorage.getItem("role");
@@ -55,25 +52,26 @@ export default function App() {
 
         <main className="max-w-7xl mx-auto px-4">
           <Routes>
-            {/* Rutas Públicas */}
             <Route path="/" element={<Cartelera />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/movie/:id" element={<Movie />} />
-            {/* Rutas Protegidas para Clientes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/book/:showtimeId" element={<Book />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
-            {/* Rutas Protegidas para Administradores */}
-            // En App.jsx, dentro de tus rutas:
+
             <Route element={<ProtectedRoute roleRequerido="admin" />}>
               <Route path="/admin" element={<AdminMovies />} />
               <Route path="/admin/movies" element={<AdminMovies />} />
               <Route path="/admin/rooms" element={<AdminRooms />} />
               <Route path="/admin/showtimes" element={<AdminShowtimes />} />
               <Route path="/admin/movies/new" element={<AdminMovieForm />} />
-              <Route path="/admin/movies/edit/:id" element={<AdminMovieForm />} />
+              <Route
+                path="/admin/movies/edit/:id"
+                element={<AdminMovieForm />}
+              />
+              <Route path="/admin/salas" element={<AdminSalas />} />
             </Route>
           </Routes>
         </main>

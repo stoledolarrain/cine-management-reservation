@@ -16,6 +16,8 @@ import { CreatePeliculaDto } from './dtos/create-pelicula.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('peliculas')
 export class PeliculasController {
@@ -33,25 +35,44 @@ export class PeliculasController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('file')) // 'file' coincide con el append en el frontend
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/posters',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
   async createPelicula(
     @Body() createPeliculaDto: CreatePeliculaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    // Convertimos duración porque FormData envía todo como string
-    createPeliculaDto.duracion = parseInt(createPeliculaDto.duracion as any, 10);
     return this.peliculasService.create(createPeliculaDto, file);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/posters',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
   async updatePelicula(
     @Param('id') id: string,
     @Body() updateData: Partial<CreatePeliculaDto>,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    if (updateData.duracion) updateData.duracion = parseInt(updateData.duracion as any, 10);
     return this.peliculasService.update(+id, updateData, file);
   }
 

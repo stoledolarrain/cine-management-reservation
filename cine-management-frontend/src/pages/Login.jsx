@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../lib/api"; // Importamos nuestra conexión al backend
+import api from "../lib/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,13 +18,9 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // 1. Hacemos la petición POST real a la ruta de tu controlador NestJS
       const response = await api.post("/auth/login", formData);
 
-      // 2. Extraemos los datos que nos devuelve el backend
-      // (Asumimos que devuelve un token y los datos del usuario)
       const token = response.data.token || response.data.access_token;
-      // Tu backend podría devolver el rol dentro del objeto user
       const userRole =
         response.data.rol || response.data.role || response.data.user?.rol;
 
@@ -32,13 +28,9 @@ export default function Login() {
         throw new Error("El servidor no devolvió un token de acceso.");
       }
 
-      // 3. Guardamos la sesión en el navegador
       localStorage.setItem("token", token);
       localStorage.setItem("role", userRole);
 
-      // 4. Redirección basada en roles
-      // Usamos window.location.href en lugar de navigate para forzar
-      // una recarga rápida y que el Navbar se actualice automáticamente.
       if (userRole === "admin") {
         window.location.href = "/admin";
       } else {
@@ -46,10 +38,8 @@ export default function Login() {
       }
     } catch (err) {
       console.error("Error de login:", err);
-      // Extraemos el mensaje de error del backend si existe
       const backendMessage =
         err.response?.data?.message || "Correo o contraseña incorrectos.";
-      // NestJS a veces devuelve los errores en un arreglo, lo manejamos por si acaso
       setError(
         Array.isArray(backendMessage) ? backendMessage[0] : backendMessage,
       );

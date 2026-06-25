@@ -34,18 +34,17 @@ export class PeliculasService {
     dto: CreatePeliculaDto,
     file?: Express.Multer.File,
   ): Promise<Pelicula> {
-    // 1. Creamos la instancia de la entidad
-    const nuevaPelicula = new Pelicula();
+    // Si hay archivo, construimos la ruta. Si no, queda null.
+    const posterUrl = file ? `/uploads/posters/${file.filename}` : null;
 
-    // 2. Asignamos manualmente (así TypeScript no se confunde con el tipo 'DeepPartial')
+    const nuevaPelicula = new Pelicula();
     nuevaPelicula.titulo = dto.titulo;
     nuevaPelicula.sinopsis = dto.sinopsis;
     nuevaPelicula.genero = dto.genero;
     nuevaPelicula.duracion = dto.duracion;
     nuevaPelicula.clasificacion = dto.clasificacion;
-    nuevaPelicula.posterUrl = file ? `/uploads/${file.filename}` : null;
+    nuevaPelicula.posterUrl = posterUrl;
 
-    // 3. Guardamos
     return await this.peliculaRepository.save(nuevaPelicula);
   }
 
@@ -55,9 +54,13 @@ export class PeliculasService {
     file?: Express.Multer.File,
   ): Promise<Pelicula> {
     const pelicula = await this.findOne(id);
-    if (file) updateData.posterUrl = `/uploads/${file.filename}`;
+
+    if (file) {
+      updateData.posterUrl = `/uploads/posters/${file.filename}`;
+    }
+
     Object.assign(pelicula, updateData);
-    return this.peliculaRepository.save(pelicula);
+    return await this.peliculaRepository.save(pelicula);
   }
 
   async remove(id: number): Promise<void> {

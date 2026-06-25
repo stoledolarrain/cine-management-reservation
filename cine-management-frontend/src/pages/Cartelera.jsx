@@ -8,15 +8,14 @@ export default function Cartelera() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Estados para la búsqueda que tu backend soporta
+  const API_URL = "http://localhost:3000";
+
   const [buscar, setBuscar] = useState("");
   const [genero, setGenero] = useState("");
 
   const fetchPeliculas = async () => {
     setLoading(true);
     try {
-      // Usamos el endpoint público que vimos en tu controlador
-      // Le pasamos los params para que arme la URL: /peliculas?buscar=...&genero=...
       const response = await api.get("/peliculas", {
         params: { buscar: buscar || undefined, genero: genero || undefined },
       });
@@ -32,14 +31,12 @@ export default function Cartelera() {
     }
   };
 
-  // Se ejecuta al montar el componente o cuando cambian los filtros
   useEffect(() => {
     fetchPeliculas();
   }, [buscar, genero]);
 
   return (
     <div className="py-8 px-4 sm:px-6 lg:px-8">
-      {/* Cabecera y Filtros */}
       <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -50,7 +47,6 @@ export default function Cartelera() {
           </p>
         </div>
 
-        {/* Controles de Búsqueda */}
         <div className="flex gap-3">
           <input
             type="text"
@@ -73,7 +69,6 @@ export default function Cartelera() {
         </div>
       </div>
 
-      {/* Manejo de Estados (Cargando y Error) */}
       {loading && (
         <p className="text-center text-gray-500 py-10 animate-pulse">
           Cargando cartelera...
@@ -85,7 +80,6 @@ export default function Cartelera() {
         </p>
       )}
 
-      {/* Grilla de Películas (Minimalista y profesional) */}
       {!loading && !error && peliculas.length === 0 && (
         <p className="text-center text-gray-500 py-10">
           No se encontraron películas.
@@ -102,7 +96,7 @@ export default function Cartelera() {
             <div className="aspect-[2/3] w-full bg-gray-200 relative overflow-hidden">
               {pelicula.posterUrl ? (
                 <img
-                  src={pelicula.posterUrl}
+                  src={`${API_URL}${pelicula.posterUrl}`}
                   alt={`Póster de ${pelicula.titulo}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -111,7 +105,6 @@ export default function Cartelera() {
                   <span>Sin Imagen</span>
                 </div>
               )}
-              {/* Badge de clasificación flotante */}
               <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold text-gray-900 shadow-sm">
                 {pelicula.clasificacion || "TP"}
               </div>

@@ -14,7 +14,6 @@ export default function AdminRooms() {
     success: "",
   });
 
-  // Cálculo en tiempo real de la capacidad
   const filasNum = parseInt(formData.filas, 10) || 0;
   const columnasNum = parseInt(formData.columnas, 10) || 0;
   const capacidadTotal = filasNum * columnasNum;
@@ -44,7 +43,6 @@ export default function AdminRooms() {
         columnas: columnasNum,
       };
 
-      // Enviamos la petición a tu backend NestJS
       await api.post("/salas", payload);
 
       setStatus({
@@ -131,7 +129,6 @@ export default function AdminRooms() {
             </div>
           </div>
 
-          {/* Tarjeta de Resumen de Capacidad */}
           <div className="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
             <div>
               <span className="block text-sm font-medium text-gray-500">

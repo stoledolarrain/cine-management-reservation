@@ -32,18 +32,18 @@ export default function MovieForm() {
     setStatus({ loading: true, error: "", success: "" });
 
     const data = new FormData();
-    // Añadimos todos los campos de texto
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    // Añadimos el archivo con la clave 'file' (debe coincidir con FileInterceptor en backend)
     if (file) data.append("file", file);
 
     try {
-      if (id) await api.put(`/peliculas/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' }});
-      else await api.post("/peliculas", data, { headers: { 'Content-Type': 'multipart/form-data' }});
+      // ✅ IMPORTANTE: No pasar encabezados manuales, Axios lo hace solo
+      if (id) await api.put(`/peliculas/${id}`, data);
+      else await api.post("/peliculas", data);
 
       setStatus({ loading: false, error: "", success: "Película guardada exitosamente." });
       setTimeout(() => navigate('/admin/movies'), 1000);
     } catch (err) {
+      console.error(err);
       setStatus({ loading: false, error: "Error al guardar. Verifica los datos.", success: "" });
     }
   };

@@ -1,4 +1,3 @@
-// src/components/ui/Button.jsx
 export function Button({
   children,
   onClick,
