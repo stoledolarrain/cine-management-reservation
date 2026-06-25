@@ -21,14 +21,12 @@ export class User {
   @Column({ type: 'varchar' })
   password: string;
 
-  // El rol define si es cliente normal o administrador del cine
   @Column({ type: 'varchar', default: 'cliente' })
   rol: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  // Un usuario puede tener muchas reservas
   @OneToMany(() => Reserva, (reserva) => reserva.usuario)
   reservas: Reserva[];
 }

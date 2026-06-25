@@ -16,15 +16,14 @@ export class Pelicula {
   genero: string;
 
   @Column({ type: 'int' })
-  duracion: number; // Duración en minutos
+  duracion: number; 
 
   @Column({ type: 'varchar', length: 20 })
-  clasificacion: string; // ej. +14, R, Todo público
+  clasificacion: string;
 
   @Column({ type: 'varchar', nullable: true })
   posterUrl: string | null;
 
-  // Una película se proyecta en muchas funciones
   @OneToMany(() => Funcion, (funcion) => funcion.pelicula)
   funciones: Funcion[];
 }

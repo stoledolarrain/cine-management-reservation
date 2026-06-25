@@ -4,7 +4,6 @@ import { CreateSalaDto } from './dtos/create-sala.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 
-// 🛡️ Al ponerlo aquí, TODAS las rutas de salas requieren ser Administrador
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('salas')
 export class SalasController {

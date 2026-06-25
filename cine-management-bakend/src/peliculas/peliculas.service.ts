@@ -34,7 +34,6 @@ export class PeliculasService {
     dto: CreatePeliculaDto,
     file?: Express.Multer.File,
   ): Promise<Pelicula> {
-    // Si hay archivo, construimos la ruta. Si no, queda null.
     const posterUrl = file ? `/uploads/posters/${file.filename}` : null;
 
     const nuevaPelicula = new Pelicula();

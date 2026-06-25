@@ -27,17 +27,14 @@ export class FuncionesService {
     const sala = await this.salaRepo.findOne({ where: { id: dto.salaId } });
     if (!sala) throw new NotFoundException('Sala no encontrada.');
 
-    // 🧠 LÓGICA DE NEGOCIO: Validar superposición de horarios
     const nuevoInicio = new Date(dto.fechaHora);
-    // Calculamos el fin sumando los minutos de duración de la película
     const nuevoFin = new Date(
       nuevoInicio.getTime() + pelicula.duracion * 60000,
     );
 
-    // Buscamos todas las funciones programadas en esa sala
     const funcionesEnSala = await this.funcionRepo.find({
       where: { sala: { id: dto.salaId } },
-      relations: { pelicula: true }, // CORREGIDO AQUÍ
+      relations: { pelicula: true }, 
     });
 
     for (const funcionExistente of funcionesEnSala) {
@@ -46,7 +43,6 @@ export class FuncionesService {
         inicioExistente.getTime() + funcionExistente.pelicula.duracion * 60000,
       );
 
-      // Regla de superposición matemática: (InicioA < FinB) y (InicioB < FinA)
       if (nuevoInicio < finExistente && inicioExistente < nuevoFin) {
         throw new ConflictException(
           `Choque de horarios. La sala está ocupada por la película '${funcionExistente.pelicula.titulo}' en ese rango de tiempo.`,
@@ -66,7 +62,7 @@ export class FuncionesService {
 
   async findAll(): Promise<Funcion[]> {
     return this.funcionRepo.find({
-      relations: { pelicula: true, sala: true, asientosOcupados: true }, // CORREGIDO AQUÍ
+      relations: { pelicula: true, sala: true, asientosOcupados: true }, 
       order: { fechaHora: 'ASC' },
     });
   }
@@ -74,7 +70,7 @@ export class FuncionesService {
   async findOne(id: number): Promise<Funcion> {
     const funcion = await this.funcionRepo.findOne({
       where: { id },
-      relations: { pelicula: true, sala: true, asientosOcupados: true }, // CORREGIDO AQUÍ
+      relations: { pelicula: true, sala: true, asientosOcupados: true },
     });
     if (!funcion) throw new NotFoundException('Función no encontrada.');
     return funcion;

@@ -13,7 +13,6 @@ interface RequestConUsuario extends Request {
 @Injectable()
 export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    // CORREGIDO: Usamos el genérico <RequestConUsuario> en la función, sin la palabra "as"
     const request = context.switchToHttp().getRequest<RequestConUsuario>();
     const user = request.user;
 

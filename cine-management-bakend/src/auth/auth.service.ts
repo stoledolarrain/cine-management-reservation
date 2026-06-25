@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from './dtos/register.dto'; // Creado en el paso anterior
-import { LoginDto } from './dtos/login.dto'; // Creado en el paso anterior
+import { RegisterDto } from './dtos/register.dto'; 
+import { LoginDto } from './dtos/login.dto'; 
 import { hashPassword } from './crypto.utils';
 
 @Injectable()

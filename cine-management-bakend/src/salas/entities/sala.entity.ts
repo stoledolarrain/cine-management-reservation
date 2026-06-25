@@ -7,7 +7,7 @@ export class Sala {
   id: number;
 
   @Column({ type: 'varchar', length: 50 })
-  nombre: string; // ej. "Sala 1 3D", "Sala VIP"
+  nombre: string; 
 
   @Column({ type: 'int' })
   filas: number;
@@ -18,7 +18,6 @@ export class Sala {
   @Column({ type: 'int' })
   capacidadTotal: number;
 
-  // Una sala alberga muchas funciones a lo largo del día
   @OneToMany(() => Funcion, (funcion) => funcion.sala)
   funciones: Funcion[];
 }

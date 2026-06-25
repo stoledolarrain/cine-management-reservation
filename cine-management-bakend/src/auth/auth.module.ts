@@ -13,7 +13,7 @@ import { AuthController } from './auth.controller';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' }, // El token durará 1 día
+        signOptions: { expiresIn: '1d' },
       }),
     }),
   ],

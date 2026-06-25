@@ -9,7 +9,6 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  // Importamos también Pelicula y Sala porque el servicio necesita consultar sus datos
   imports: [
     TypeOrmModule.forFeature([Funcion, Pelicula, Sala]),
     UsersModule,

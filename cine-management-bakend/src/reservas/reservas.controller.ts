@@ -10,7 +10,6 @@ import { ReservasService } from './reservas.service';
 import { CreateReservaDto } from './dtos/create-reserva.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
-// 🛡️ Toda reserva exige estar logueado (Regla de negocio)
 @UseGuards(AuthGuard)
 @Controller('reservas')
 export class ReservasController {
@@ -21,8 +20,7 @@ export class ReservasController {
     @Body() createReservaDto: CreateReservaDto,
     @Request() req: unknown,
   ) {
-    // 🧠 Le decimos a TypeScript la forma exacta que tiene req.user (id y rol)
-    // Esto quita el error de ESLint por completo sin usar trucos de ignorar líneas
+
     const requestConUsuario = req as { user: { id: number; rol: string } };
     const userId = requestConUsuario.user.id;
 

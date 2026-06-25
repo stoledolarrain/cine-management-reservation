@@ -12,12 +12,11 @@ export class SalasService {
   ) {}
 
   async create(createSalaDto: CreateSalaDto): Promise<Sala> {
-    // 🧠 LÓGICA DE NEGOCIO: Capacidad Total = Filas * Columnas
     const capacidadTotal = createSalaDto.filas * createSalaDto.columnas;
 
     const nuevaSala = this.salaRepository.create({
       ...createSalaDto,
-      capacidadTotal, // Inyectamos el cálculo en la base de datos
+      capacidadTotal,
     });
 
     return this.salaRepository.save(nuevaSala);

@@ -10,16 +10,15 @@ import { PeliculasModule } from './peliculas/peliculas.module';
 import { SalasModule } from './salas/salas.module';
 import { FuncionesModule } from './funciones/funciones.module';
 import { ReservasModule } from './reservas/reservas.module';
-import { UploadsModule } from './uploads/uploads.module'; // NUEVO IMPORT
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // 👇 NUEVO: Habilitar que la carpeta uploads sea visible en internet
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'uploads'), // Sube 2 niveles para salir de /dist y /src
-      serveRoot: '/uploads', // La ruta en el navegador será /uploads/...
+      rootPath: join(__dirname, '..', '..', 'uploads'),
+      serveRoot: '/uploads', 
     }),
 
     TypeOrmModule.forRoot({
@@ -38,7 +37,7 @@ import { UploadsModule } from './uploads/uploads.module'; // NUEVO IMPORT
     SalasModule,
     FuncionesModule,
     ReservasModule,
-    UploadsModule, // 👇 NUEVO: Registrar el módulo
+    UploadsModule, 
   ],
   controllers: [],
   providers: [],

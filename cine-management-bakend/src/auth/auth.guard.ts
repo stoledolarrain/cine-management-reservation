@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // CORREGIDO: Usamos el genérico <RequestConUsuario>
     const request = context.switchToHttp().getRequest<RequestConUsuario>();
     const token = this.extractTokenFromHeader(request);
 
@@ -33,7 +32,6 @@ export class AuthGuard implements CanActivate {
     try {
       const secret = this.configService.get<string>('JWT_SECRET') || '';
 
-      // CORREGIDO: Quitamos el "as". Declaramos el tipo en la variable para apaciguar al linter
       const payload: { sub: number } = await this.jwtService.verifyAsync(
         token,
         {
@@ -44,7 +42,6 @@ export class AuthGuard implements CanActivate {
       const user = await this.usersService.findById(payload.sub);
       if (!user) throw new UnauthorizedException('El usuario ya no existe.');
 
-      // Guardamos al usuario en la petición para usarlo en los controladores
       request.user = user;
     } catch {
       throw new UnauthorizedException('Token inválido o expirado.');

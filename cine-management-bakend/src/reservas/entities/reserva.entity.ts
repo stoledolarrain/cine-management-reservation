@@ -21,15 +21,12 @@ export class Reserva {
   @CreateDateColumn()
   fechaReserva: Date;
 
-  // Quién compró
   @ManyToOne(() => User, (user) => user.reservas)
   usuario: User;
 
-  // Para qué función
   @ManyToOne(() => Funcion, (funcion) => funcion.reservas)
   funcion: Funcion;
 
-  // Qué asientos exactos compró en esta reserva
   @OneToMany(() => Asiento, (asiento) => asiento.reserva, { cascade: true })
   asientos: Asiento[];
 }

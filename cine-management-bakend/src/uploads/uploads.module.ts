@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UploadsController } from './uploads.controller';
-import { UsersModule } from '../users/users.module'; // Importamos a los usuarios
-import { JwtModule } from '@nestjs/jwt'; // Importamos las herramientas del Token
+import { UsersModule } from '../users/users.module';
+import { JwtModule } from '@nestjs/jwt'; 
 
 @Module({
   imports: [UsersModule, JwtModule],

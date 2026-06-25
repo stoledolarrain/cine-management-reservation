@@ -24,12 +24,11 @@ export class ReservasService {
     });
     if (!funcion) throw new NotFoundException('La función no existe.');
 
-    // 🧠 LÓGICA DE NEGOCIO: Evitar doble reserva (Concurrencia)
-    // Buscamos si alguno de los asientos solicitados ya está en la base de datos para esta función
+ 
     const asientosOcupados = await this.asientoRepo.find({
       where: {
         funcion: { id: dto.funcionId },
-        codigo: In(dto.asientos), // Busca coincidencias en el array ["A1", "A2"]
+        codigo: In(dto.asientos),
       },
     });
 
@@ -40,31 +39,25 @@ export class ReservasService {
       );
     }
 
-    // Calcula el total a pagar
     const totalPagado = funcion.precioEntrada * dto.asientos.length;
 
-    // Prepara las entidades de Asiento (extrayendo fila y columna del código ej. "A-1")
-    // Prepara las entidades de Asiento
     const nuevosAsientos = dto.asientos.map((codigoStr) => {
-      // Separamos "A-1" en ["A", "1"]
       const [letra, numero] = codigoStr.split('-');
 
-      // Convertimos 'A' en 1, 'B' en 2, etc. (charCodeAt('A') es 65)
       const fila = letra.toUpperCase().charCodeAt(0) - 64;
       const columna = parseInt(numero, 10);
 
       return this.asientoRepo.create({
         codigo: codigoStr,
-        fila: fila, // Ahora guardamos el valor real (1, 2, etc.)
-        columna: columna, // Ahora guardamos el valor real (1, 2, etc.)
+        fila: fila, 
+        columna: columna,
         funcion: funcion,
       });
     });
 
-    // Creamos la Reserva. Gracias a "cascade: true", los asientos se guardarán solos.
     const reserva = this.reservaRepo.create({
       totalPagado,
-      usuario: { id: userId }, // Relacionamos con el ID del usuario logueado
+      usuario: { id: userId }, 
       funcion: funcion,
       asientos: nuevosAsientos,
     });
@@ -73,7 +66,6 @@ export class ReservasService {
   }
 
   async findMisReservas(userId: number): Promise<Reserva[]> {
-    // Retorna las reservas del usuario con todo el detalle para mostrar el ticket
     return this.reservaRepo.find({
       where: { usuario: { id: userId } },
       relations: {
@@ -82,7 +74,7 @@ export class ReservasService {
           sala: true,
         },
         asientos: true,
-      }, // CORREGIDO AQUÍ PARA RELACIONES ANIDADAS
+      }, 
       order: { fechaReserva: 'DESC' },
     });
   }

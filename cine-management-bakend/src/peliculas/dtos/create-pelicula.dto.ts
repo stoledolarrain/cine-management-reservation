@@ -11,7 +11,6 @@ export class CreatePeliculaDto {
   @IsString()
   genero: string;
 
-  // 2. Añade este bloque exactamente así:
   @Type(() => Number)
   @IsInt()
   @Min(1, { message: 'La duración debe ser mayor a 0 minutos' })

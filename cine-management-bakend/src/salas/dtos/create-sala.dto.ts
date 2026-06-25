@@ -12,5 +12,4 @@ export class CreateSalaDto {
   @Min(1)
   columnas: number;
 
-  // La capacidadTotal no se pide en el DTO porque la calcularemos en el backend (filas * columnas)
 }
